@@ -53,7 +53,7 @@ Developers and technical teams regularly paste API responses, configuration file
 
 ```bash
 # Clone the repository
-git clone https://github.com/<your-org>/bad-formatter.git
+git clone https://github.com/anfieldlad/bad-formatter.git
 cd bad-formatter
 
 # Install dependencies
