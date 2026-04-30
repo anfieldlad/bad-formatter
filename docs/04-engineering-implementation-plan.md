@@ -49,24 +49,31 @@ bad-formatter/
     app/
       App.tsx
       App.css
+      App.test.tsx
     components/
       ActionToolbar.tsx
       EditorPanel.tsx
+      EmptyOutput.tsx
       Header.tsx
-      PrivacyNotice.tsx
+      JsonTreeView.tsx
       StatusMessage.tsx
       TextStats.tsx
     domain/
       jsonFormatter.ts
+      jsonFormatter.test.ts
+      sampleJson.ts
       textStats.ts
+      textStats.test.ts
     hooks/
       useClipboard.ts
       useDownload.ts
       useJsonFormatter.ts
+      useKeyboardShortcuts.ts
     types/
       formatter.ts
     test/
       fixtures.ts
+      setup.ts
     main.tsx
     index.css
   package.json
@@ -131,22 +138,29 @@ Acceptance criteria:
 
 Tasks:
 
-- Build `Header`.
-- Build `PrivacyNotice`.
-- Build `ActionToolbar`.
-- Build `EditorPanel`.
-- Build `StatusMessage`.
-- Build `TextStats`.
+- Build `Header` with brand wordmark and privacy chip.
+- Build format tab strip below the header (showing "JSON" with active underline).
+- Build `ActionToolbar` with transform buttons (Beautify, Minify, Validate) and indent segmented control.
+- Build `EditorPanel` with panel header actions:
+  - Input panel: `Sample` and `Clear` buttons.
+  - Output panel: `Text | Tree` view toggle, `Copy` and `Download` buttons.
+- Build `EmptyOutput` placeholder for when no output exists.
+- Build `JsonTreeView` for tree-mode output display.
+- Build `StatusMessage` as a status line anchored to the bottom of the shell.
+- Build `TextStats` for panel footer stats (character count and KB).
 - Compose the single-screen workspace in `App`.
 - Add responsive layout:
-  - Desktop: input and output side by side.
-  - Mobile: input stacked above output.
+  - Desktop (> 920px): input and output side by side.
+  - Tablet (≤ 920px): input stacked above output.
+  - Mobile (≤ 560px): header collapses to two rows, buttons stretch full width.
 
 Acceptance criteria:
 
 - The first screen is the formatter workspace, not a landing page.
-- Privacy notice is visible without interaction.
-- Input and output editors are visible.
+- Privacy chip is visible in the header without interaction.
+- Format tab strip shows "JSON" as the active tab.
+- Input and output editors are visible with panel header actions.
+- Empty output shows a placeholder hint.
 - Toolbar actions are visible.
 - Layout does not require horizontal scrolling on mobile.
 
@@ -159,9 +173,17 @@ Tasks:
   - output
   - indent size
   - status
+  - output view mode (text or tree)
 - Wire Beautify action.
 - Wire Minify action.
 - Wire Validate action.
+- Wire Sample action (loads demo JSON from `sampleJson.ts` into input).
+- Wire view toggle (Text | Tree) in output panel.
+- Implement `useKeyboardShortcuts` hook:
+  - `Ctrl/⌘ + B` → Beautify.
+  - `Ctrl/⌘ + M` → Minify.
+  - `Ctrl/⌘ + L` → Validate.
+  - `Esc` → Blur editor.
 - Preserve input after all formatter actions.
 - Preserve previous output when validation fails.
 - Keep Validate from changing output.
@@ -174,6 +196,10 @@ Acceptance criteria:
 - Invalid JSON shows an error and does not crash.
 - Empty input shows `Paste JSON before running this action.`
 - Indentation selector affects Beautify output.
+- Sample loads demo JSON into the input editor.
+- Keyboard shortcuts trigger the correct actions.
+- Tree view displays parsed JSON; Text view displays raw text.
+- Tree view is disabled when output is not an object or array.
 
 ### Phase 5 - Output Actions and Metadata
 
@@ -181,21 +207,22 @@ Tasks:
 
 - Implement `useClipboard`.
 - Implement `useDownload`.
-- Wire Copy action.
-- Wire Download action.
-- Wire Clear action.
-- Add input and output character counts.
-- Optionally add estimated byte/KB counts.
+- Wire Copy action (in output panel header).
+- Wire Download action (in output panel header).
+- Wire Clear action (in input panel header — clears input only).
+- Add input and output character counts in panel footers.
+- Add estimated byte/KB counts in panel footers.
 
 Acceptance criteria:
 
 - Copy is disabled when output is empty.
 - Download is disabled when output is empty.
-- Clear resets input, output, status, and counts.
+- Clear resets input and status. Output remains until the next action.
 - Clear keeps selected indentation unchanged.
 - Download uses `formatted.json`.
 - Download is generated with Blob API in the browser.
 - Copy failure is handled with a useful status message.
+- Stats update in real time as input changes and after actions produce output.
 
 ### Phase 6 - Styling, Responsive Behavior, and Accessibility
 
@@ -251,8 +278,9 @@ Acceptance criteria:
 Responsibilities:
 
 - Own workspace state.
-- Compose layout.
-- Pass action handlers to toolbar.
+- Compose the 4-row shell grid (header, action bar, workspace, status line).
+- Register keyboard shortcuts via `useKeyboardShortcuts`.
+- Pass action handlers to toolbar and panel headers.
 - Pass input and output values to editor panels.
 - Pass current status to status message.
 - Calculate text stats.
@@ -260,36 +288,49 @@ Responsibilities:
 State:
 
 ```ts
+type OutputView = 'text' | 'tree';
+
 type FormatterState = {
   input: string;
   output: string;
   indentSize: 2 | 4;
   status: FormatterStatus;
+  outputView: OutputView;
 };
 ```
 
-### 6.2 `ActionToolbar`
+### 6.2 `Header`
+
+Responsibilities:
+
+- Render brand wordmark: "**Bad**" in accent orange, "Formatter" in primary text.
+- Render privacy chip on the right: shield icon + "Browser-only · No upload".
+- Render format tab strip below the header row with "JSON" as the active tab.
+
+Rules:
+
+- Privacy chip is informational only, not interactive.
+- Format tab strip is structural. Additional format tabs will appear here in Phase 3.
+
+### 6.3 `ActionToolbar`
 
 Props:
 
 - `indentSize`
-- `hasInput`
-- `hasOutput`
 - `onBeautify`
 - `onMinify`
 - `onValidate`
-- `onCopy`
-- `onDownload`
-- `onClear`
 - `onIndentSizeChange`
 
 Rules:
 
-- Beautify, Minify, and Validate should be disabled when input is empty, or enabled and allowed to show the empty-input message. Prefer disabled only if the empty state remains understandable.
-- Copy and Download must be disabled when output is empty.
-- Clear should be enabled when input or output exists.
+- Contains only transform actions (Beautify, Minify, Validate) and the indent segmented control.
+- Copy, Download, and Clear live in their respective panel headers, not in this toolbar.
+- Beautify, Minify, and Validate are always clickable. If input is empty, an info status is shown.
+- Each button displays its keyboard shortcut hint (e.g., `Beautify ⌘B`).
+- The indent segmented control shows `2` and `4` with accent fill on the active value.
 
-### 6.3 `EditorPanel`
+### 6.4 `EditorPanel`
 
 Props:
 
@@ -300,6 +341,8 @@ Props:
 - `readOnly`
 - `onChange`
 - `stats`
+- `actions` (panel header actions — Sample/Clear for input, Copy/Download for output)
+- `viewToggle` (optional — Text/Tree toggle for output panel)
 
 Rules:
 
@@ -307,8 +350,29 @@ Rules:
 - Output editor is read-only for MVP.
 - Use plain text rendering through textarea or equivalent safe editor.
 - Do not render user text as HTML.
+- Panel header: label on the left, actions on the right.
+- Panel footer: stats in muted text (e.g., `1,240 chars · 1.21 KB`).
 
-### 6.4 `StatusMessage`
+### 6.5 `EmptyOutput`
+
+Responsibilities:
+
+- Display a centered hint when no output exists.
+- Copy: `Run an action to see formatted output here.`
+
+### 6.6 `JsonTreeView`
+
+Responsibilities:
+
+- Render parsed JSON as a collapsible tree.
+- Color rules: object keys in accent-soft, strings in emerald, numbers in amber, booleans in violet, null in muted text.
+
+Rules:
+
+- Enabled only when output is a valid JSON object or array.
+- Switching between Text and Tree does not modify the output value.
+
+### 6.7 `StatusMessage`
 
 Props:
 
@@ -317,8 +381,11 @@ Props:
 Rules:
 
 - Use semantic text for ready, success, info, and error.
-- Use an ARIA live region for status updates.
-- Keep message close to the toolbar and editors.
+- Use an ARIA live region (`aria-live="polite"`) for status updates.
+- Anchored to the bottom of the app shell as a single slim row.
+- Always present at the same height to prevent layout jumps.
+- States: `ready` (muted), `info` (indigo), `success` (emerald), `error` (red).
+- Success messages include an optional timing tail (e.g., `· beautified in 3 ms`).
 
 ## 7. Domain Implementation Details
 
@@ -353,7 +420,11 @@ export function minifyJson(input: string): JsonFormatResult;
 export function getTextStats(text: string): TextStats;
 ```
 
-### 7.3 Error Normalization
+### 7.3 Sample JSON
+
+`sampleJson.ts` exports a small, realistic demo JSON string. Used by the Sample button to populate the input editor so first-time users can try the tool without finding their own input.
+
+### 7.4 Error Normalization
 
 Implementation should:
 
@@ -402,15 +473,19 @@ Focus on `domain/`:
 
 Focus on component behavior:
 
-- Initial state shows privacy notice and empty editors.
+- Initial state shows privacy chip, format tab, and empty editors.
+- Empty output shows the `EmptyOutput` placeholder.
 - Typing input updates character count.
 - Beautify updates output and status.
 - Minify updates output and status.
 - Validate updates status and leaves output unchanged.
 - Invalid JSON shows an error.
 - Invalid JSON preserves previous output.
-- Clear resets workspace.
+- Sample loads demo JSON into input.
+- Clear resets input and status.
 - Copy and Download are disabled without output.
+- Tree view toggle switches between text and tree display.
+- Keyboard shortcuts (Ctrl/⌘ + B, M, L) trigger the correct actions.
 
 ### 9.3 End-to-End Smoke Tests
 
@@ -419,9 +494,12 @@ Manual or automated:
 - Valid JSON beautify flow.
 - Valid JSON minify flow.
 - Invalid JSON validation flow.
+- Sample → Beautify → Copy flow.
 - Copy output flow.
 - Download output flow.
 - Clear flow.
+- Tree view toggle flow.
+- Keyboard shortcut flow.
 - Mobile viewport layout check.
 
 ### 9.4 Privacy Verification
@@ -477,15 +555,21 @@ No environment variables are required for MVP.
 - Implement JSON formatter domain functions.
 - Add unit tests for domain functions.
 - Build one-screen JSON Formatter Workspace.
-- Add input and output editors.
+- Add input and output editors with panel header actions.
 - Add Beautify, Minify, and Validate actions.
-- Add indentation selector.
-- Add status messages.
+- Add indentation segmented control.
+- Add status line at the bottom of the shell.
 - Add Copy, Download, and Clear actions.
-- Add text stats.
-- Add privacy notice.
-- Add responsive layout.
-- Add accessibility labels and focus states.
+- Add text stats in panel footers.
+- Add privacy chip in header.
+- Add format tab strip showing "JSON".
+- Add Sample button to load demo JSON.
+- Add keyboard shortcuts (⌘/Ctrl + B, M, L).
+- Add output view toggle (Text | Tree).
+- Add `JsonTreeView` component.
+- Add `EmptyOutput` placeholder.
+- Add responsive layout (desktop, tablet, mobile breakpoints).
+- Add accessibility labels, focus states, and ARIA live region.
 - Run build and tests.
 
 ### Should Have
@@ -494,6 +578,7 @@ No environment variables are required for MVP.
 - Large input warning around 1 MB.
 - Playwright smoke tests for primary flows.
 - Production security headers documentation for deployment.
+- Keyboard shortcut hints displayed on action buttons.
 
 ### Won't Have in MVP
 
@@ -504,9 +589,10 @@ No environment variables are required for MVP.
 - Autosave.
 - File upload.
 - Schema validation.
-- Multi-format switcher.
+- Multi-format switcher (beyond the visual JSON tab).
 - Analytics.
 - AI features.
+- Light theme or theme toggle.
 
 ## 12. Risk Management
 
@@ -540,14 +626,20 @@ Engineering implementation is complete when:
 
 - The app is a React TypeScript Vite static client-side app.
 - The formatter workspace is the first screen.
+- Header shows the brand wordmark and privacy chip.
+- Format tab strip shows "JSON" as the active tab.
 - User can paste JSON into the input editor.
 - User can validate JSON.
 - User can beautify JSON with 2-space or 4-space indentation.
 - User can minify JSON.
+- User can load sample JSON.
 - User can copy output.
 - User can download output as `formatted.json`.
-- User can clear the workspace.
-- Input and output character counts are visible.
+- User can clear input.
+- User can toggle output between Text and Tree views.
+- Keyboard shortcuts (⌘/Ctrl + B, M, L) work.
+- Input and output character counts and KB estimates are visible in panel footers.
+- Empty output shows a placeholder hint.
 - Invalid JSON shows a clear error and does not crash.
 - No user text is stored or transmitted.
 - Tests and production build pass.
