@@ -1,0 +1,1 @@
+export const sampleJson = `{"app":"Bad Formatter","version":"1.0.0","private":true,"tags":["json","formatter","privacy"],"author":{"name":"Anonymous","email":"hello@example.com"},"features":{"beautify":true,"minify":true,"validate":true,"upload":false},"limits":{"maxBytes":1048576,"maxDepth":64},"updatedAt":"2026-04-30T00:00:00Z"}`;

@@ -1,0 +1,680 @@
+/* ─── App Shell ──────────────────────────────────────────────────── */
+
+.app-shell {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  gap: 14px;
+  width: min(1480px, 100%);
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 24px 28px;
+}
+
+/* ─── Header ─────────────────────────────────────────────────────── */
+
+.site-header {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.site-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.site-brand {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.site-brand h1 {
+  margin: 0;
+  color: var(--text-1);
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.brand-accent {
+  color: var(--accent);
+}
+
+.brand-tagline {
+  color: var(--text-3);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.privacy-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 12px;
+  border: 1px solid var(--accent-border);
+  border-radius: var(--radius-pill);
+  background: var(--accent-subtle);
+  color: var(--accent-soft);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+/* Format tab strip */
+
+.format-tabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  margin: 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.format-tab {
+  position: relative;
+  padding: 8px 14px 10px;
+  margin-bottom: -1px;
+  border: 0;
+  background: transparent;
+  color: var(--text-2);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: default;
+}
+
+.format-tab.active {
+  color: var(--text-1);
+  border-bottom: 2px solid var(--accent);
+}
+
+/* ─── Primary Action Bar ─────────────────────────────────────────── */
+
+.action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-panel);
+  background: linear-gradient(180deg, var(--surface-2), var(--surface));
+}
+
+.action-bar-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.action-bar-divider {
+  width: 1px;
+  height: 22px;
+  background: var(--border-mid);
+}
+
+.indent-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.indent-label {
+  color: var(--text-3);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-right: 4px;
+}
+
+.indent-control fieldset {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-button);
+  background: var(--surface);
+}
+
+.indent-control legend {
+  display: none;
+}
+
+/* ─── Buttons ────────────────────────────────────────────────────── */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-button);
+  background: var(--surface-3);
+  color: var(--text-1);
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background 130ms ease,
+    border-color 130ms ease,
+    box-shadow 130ms ease,
+    transform 90ms ease,
+    opacity 130ms ease,
+    color 130ms ease;
+}
+
+.button:hover:not(:disabled) {
+  background: #2a2640;
+  border-color: #3a3554;
+}
+
+.button.primary {
+  border-color: transparent;
+  background: var(--accent);
+  color: #1a0d04;
+  font-weight: 700;
+}
+
+.button.primary:hover:not(:disabled) {
+  background: var(--accent-hover);
+  box-shadow: 0 4px 22px rgba(249, 115, 22, 0.35);
+}
+
+.button.ghost {
+  border-color: transparent;
+  background: transparent;
+  color: var(--text-2);
+  min-height: 30px;
+  padding: 0 10px;
+  font-size: 0.78rem;
+}
+
+.button.ghost:hover:not(:disabled) {
+  background: rgba(249, 115, 22, 0.07);
+  color: var(--accent-soft);
+}
+
+.button.ghost.danger:hover:not(:disabled) {
+  background: rgba(248, 113, 113, 0.08);
+  color: #fca5a5;
+}
+
+.button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.32;
+}
+
+.button:focus-visible,
+.segmented:has(input:focus-visible),
+.editor:focus-visible,
+.view-option:focus-visible {
+  outline: none;
+  box-shadow: var(--accent-glow);
+}
+
+.kbd-hint {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 4px;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.2);
+  color: rgba(255, 255, 255, 0.7);
+  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.button.ghost .kbd-hint {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-3);
+}
+
+/* ─── Segmented (indent) ─────────────────────────────────────────── */
+
+.segmented {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  min-height: 26px;
+  padding: 0 8px;
+  border-radius: 6px;
+  color: var(--text-2);
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background 130ms ease,
+    color 130ms ease;
+}
+
+.segmented input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.segmented.active {
+  background: var(--accent);
+  color: #1a0d04;
+}
+
+/* ─── Workspace ──────────────────────────────────────────────────── */
+
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 14px;
+  min-height: 0;
+}
+
+/* ─── Editor Panel ───────────────────────────────────────────────── */
+
+.editor-panel {
+  display: grid;
+  grid-template-rows: auto minmax(420px, 1fr) auto;
+  min-width: 0;
+  min-height: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-panel);
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.editor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 44px;
+  padding: 7px 12px 7px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+}
+
+.editor-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.editor-header label {
+  color: var(--text-2);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.editor-header-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.editor-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 30px;
+  padding: 4px 16px 6px;
+  border-top: 1px solid var(--border);
+  background: var(--surface-2);
+}
+
+.text-stats {
+  margin: 0;
+  color: var(--text-3);
+  font-size: 0.74rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ─── Editor ─────────────────────────────────────────────────────── */
+
+.editor-body {
+  position: relative;
+  min-height: 0;
+  display: flex;
+  background: var(--editor-bg);
+}
+
+.editor-body:has(.editor[readonly]) {
+  background: var(--editor-bg-ro);
+}
+
+.editor {
+  width: 100%;
+  height: 100%;
+  min-height: 420px;
+  padding: 18px 18px 18px 18px;
+  border: 0;
+  resize: none;
+  background: var(--editor-bg);
+  color: #d6d2ee;
+  font-family:
+    ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+    monospace;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  tab-size: 2;
+  caret-color: var(--accent);
+}
+
+.editor::placeholder {
+  color: var(--text-3);
+}
+
+.editor[readonly] {
+  background: var(--editor-bg-ro);
+  color: #b6b1d2;
+}
+
+/* ─── Empty Output State ─────────────────────────────────────────── */
+
+.output-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 24px;
+  color: var(--text-3);
+  text-align: center;
+  pointer-events: none;
+}
+
+.output-empty .empty-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--text-2);
+}
+
+.output-empty p {
+  margin: 0;
+  max-width: 24ch;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+/* ─── View Toggle ────────────────────────────────────────────────── */
+
+.view-toggle {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--surface);
+}
+
+.view-option {
+  min-height: 24px;
+  padding: 0 10px;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--text-2);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition:
+    background 130ms ease,
+    color 130ms ease;
+}
+
+.view-option.active {
+  background: var(--accent);
+  color: #1a0d04;
+}
+
+.view-option:disabled {
+  cursor: not-allowed;
+  opacity: 0.32;
+}
+
+/* ─── Tree View ──────────────────────────────────────────────────── */
+
+.tree-view {
+  flex: 1;
+  min-height: 420px;
+  padding: 16px;
+  overflow: auto;
+  background: var(--editor-bg-ro);
+  color: #c4c0e4;
+  font-family:
+    ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+    monospace;
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+
+.tree-node,
+.tree-children {
+  min-width: max-content;
+}
+
+.tree-row,
+.tree-toggle {
+  min-height: 26px;
+}
+
+.tree-row {
+  display: flex;
+  align-items: center;
+}
+
+.tree-toggle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  border-radius: 5px;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 100ms ease;
+}
+
+.tree-toggle:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.tree-toggle:focus-visible {
+  outline: none;
+  box-shadow: var(--accent-glow);
+}
+
+.tree-key {
+  color: var(--accent-soft);
+}
+
+.tree-summary {
+  color: #e2deff;
+  font-weight: 700;
+}
+
+.tree-string {
+  color: #6ee7b7;
+}
+
+.tree-number {
+  color: #fcd34d;
+}
+
+.tree-boolean {
+  color: #c4b5fd;
+}
+
+.tree-null {
+  color: var(--text-2);
+}
+
+/* ─── Status Line ────────────────────────────────────────────────── */
+
+.status-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  padding: 4px 6px;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: var(--text-2);
+  border-top: 1px solid var(--border);
+}
+
+.status-line.ready,
+.status-line.info {
+  color: var(--text-2);
+}
+
+.status-line.info .status-icon {
+  color: var(--info);
+}
+
+.status-line.success {
+  color: var(--text-1);
+}
+
+.status-line.success .status-icon {
+  color: var(--success);
+}
+
+.status-line.error {
+  color: var(--text-1);
+}
+
+.status-line.error .status-icon {
+  color: var(--error);
+}
+
+.status-line .status-icon {
+  display: inline-flex;
+  align-items: center;
+}
+
+.status-line .status-message {
+  flex: 1;
+  min-width: 0;
+}
+
+.status-line .status-timing {
+  color: var(--text-3);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ─── Responsive ─────────────────────────────────────────────────── */
+
+@media (max-width: 920px) {
+  .app-shell {
+    min-height: auto;
+    padding: 18px 18px;
+    gap: 12px;
+  }
+
+  .action-bar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .action-bar-divider {
+    display: none;
+  }
+
+  .action-bar-group {
+    justify-content: flex-start;
+  }
+
+  .workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .editor-panel {
+    grid-template-rows: auto minmax(280px, 40vh) auto;
+  }
+
+  .editor {
+    min-height: 280px;
+  }
+
+  .tree-view,
+  .output-empty {
+    min-height: 280px;
+  }
+}
+
+@media (max-width: 560px) {
+  .app-shell {
+    gap: 10px;
+    padding: 14px 14px;
+  }
+
+  .site-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .site-brand h1 {
+    font-size: 1.35rem;
+  }
+
+  .button {
+    flex: 1 1 calc(33% - 6px);
+    min-width: 0;
+  }
+
+  .editor-header {
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+  }
+
+  .editor-header-left {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .editor-header-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
