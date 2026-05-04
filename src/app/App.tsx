@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { Clipboard, Download, Eraser, Sparkles } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Clipboard, Download, Eraser, Share2, Sparkles } from "lucide-react";
 import { ActionToolbar } from "../components/ActionToolbar";
 import { EditorPanel } from "../components/EditorPanel";
 import { EmptyOutput } from "../components/EmptyOutput";
@@ -12,6 +12,11 @@ import { useDownload } from "../hooks/useDownload";
 import { useJsonFormatter } from "../hooks/useJsonFormatter";
 import { useKeyboardShortcuts } from "../hooks/useKeyboardShortcuts";
 import { useTheme } from "../hooks/useTheme";
+import {
+  buildShareUrl,
+  decodeShareFromUrl,
+  encodeShare,
+} from "../utils/shareLink";
 import type { OutputView } from "../types/formatter";
 import "./App.css";
 
@@ -23,6 +28,17 @@ export function App() {
   const { downloadText } = useDownload();
   const hasInput = formatter.input.trim().length > 0;
   const hasOutput = formatter.output.length > 0;
+
+  // Bootstrap from a shared URL on first load
+  useEffect(() => {
+    const shared = decodeShareFromUrl();
+    if (shared) {
+      formatter.setInput(shared);
+      // Remove the hash so subsequent refreshes start clean
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const outputJson = useMemo(() => {
     if (!hasOutput) {
@@ -36,6 +52,12 @@ export function App() {
   const canShowTree =
     Array.isArray(outputJson) ||
     (typeof outputJson === "object" && outputJson !== null);
+
+  // Compute share payload whenever output changes
+  const sharePayload = useMemo(
+    () => (hasOutput ? encodeShare(formatter.output) : null),
+    [hasOutput, formatter.output],
+  );
 
   async function handleCopy() {
     if (!hasOutput) {
@@ -64,6 +86,35 @@ export function App() {
         ? { type: "success", message: "Download started." }
         : { type: "error", message: "Could not download output." },
     );
+  }
+
+  async function handleShare() {
+    if (!hasOutput || !sharePayload) {
+      return;
+    }
+
+    const url = buildShareUrl(sharePayload.encoded);
+    const copied = await copyText(url);
+
+    if (!copied) {
+      formatter.setStatus({
+        type: "error",
+        message: "Could not copy share link.",
+      });
+      return;
+    }
+
+    if (sharePayload.state === "warn") {
+      formatter.setStatus({
+        type: "success",
+        message: `Share link copied — URL is ${sharePayload.label}. May not work in all apps.`,
+      });
+    } else {
+      formatter.setStatus({
+        type: "success",
+        message: "Share link copied to clipboard.",
+      });
+    }
   }
 
   function handleClearInput() {
@@ -134,6 +185,8 @@ export function App() {
     </div>
   );
 
+  const tooLarge = sharePayload?.state === "too-large";
+
   const outputHeaderActions = (
     <>
       <button
@@ -154,6 +207,31 @@ export function App() {
         <Download aria-hidden="true" size={14} />
         Download
       </button>
+      <div className="share-action">
+        {sharePayload && sharePayload.state !== "ok" && (
+          <span
+            className={`share-size-chip share-size-${sharePayload.state}`}
+            title={
+              tooLarge
+                ? "JSON is too large to share via URL"
+                : "URL will be long and may not work in all apps"
+            }
+          >
+            {sharePayload.label}
+            {tooLarge ? " · Too large" : " · Long URL"}
+          </span>
+        )}
+        <button
+          type="button"
+          className="button ghost"
+          onClick={handleShare}
+          disabled={!hasOutput || tooLarge}
+          title={tooLarge ? "JSON too large to share via URL" : undefined}
+        >
+          <Share2 aria-hidden="true" size={14} />
+          Share
+        </button>
+      </div>
     </>
   );
 

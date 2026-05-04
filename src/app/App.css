@@ -624,6 +624,36 @@
   text-decoration: underline;
 }
 
+/* ─── Share ──────────────────────────────────────────────────────── */
+
+.share-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.share-size-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 7px;
+  border-radius: var(--radius-pill);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  cursor: default;
+}
+
+.share-size-warn {
+  background: rgba(245, 158, 11, 0.12);
+  color: #f59e0b;
+}
+
+.share-size-too-large {
+  background: rgba(248, 113, 113, 0.12);
+  color: var(--error);
+}
+
 /* ─── Theme Toggle ────────────────────────────────────────────────── */
 
 .theme-toggle {
