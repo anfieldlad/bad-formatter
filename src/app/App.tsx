@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import { Clipboard, Download, Eraser, Share2, Sparkles } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Check, Clipboard, Download, Eraser, Share2, Sparkles, X } from "lucide-react";
 import { ActionToolbar } from "../components/ActionToolbar";
 import { EditorPanel } from "../components/EditorPanel";
 import { EmptyOutput } from "../components/EmptyOutput";
@@ -28,6 +28,8 @@ export function App() {
   const { downloadText } = useDownload();
   const hasInput = formatter.input.trim().length > 0;
   const hasOutput = formatter.output.length > 0;
+  const [shareState, setShareState] = useState<"idle" | "copied" | "error">("idle");
+  const shareResetRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Bootstrap from a shared URL on first load
   useEffect(() => {
@@ -88,6 +90,12 @@ export function App() {
     );
   }
 
+  function flashShareState(next: "copied" | "error") {
+    if (shareResetRef.current) clearTimeout(shareResetRef.current);
+    setShareState(next);
+    shareResetRef.current = setTimeout(() => setShareState("idle"), 2000);
+  }
+
   async function handleShare() {
     if (!hasOutput || !sharePayload) {
       return;
@@ -97,22 +105,20 @@ export function App() {
     const copied = await copyText(url);
 
     if (!copied) {
+      flashShareState("error");
       formatter.setStatus({
         type: "error",
-        message: "Could not copy share link.",
+        message: "Could not copy share link. Try again or copy the URL manually.",
       });
       return;
     }
 
+    flashShareState("copied");
+
     if (sharePayload.state === "warn") {
       formatter.setStatus({
-        type: "success",
+        type: "info",
         message: `Share link copied — URL is ${sharePayload.label}. May not work in all apps.`,
-      });
-    } else {
-      formatter.setStatus({
-        type: "success",
-        message: "Share link copied to clipboard.",
       });
     }
   }
@@ -223,13 +229,25 @@ export function App() {
         )}
         <button
           type="button"
-          className="button ghost"
+          className={`button ghost share-btn share-btn-${shareState}`}
           onClick={handleShare}
-          disabled={!hasOutput || tooLarge}
+          disabled={!hasOutput || tooLarge || shareState !== "idle"}
           title={tooLarge ? "JSON too large to share via URL" : undefined}
+          aria-label={
+            shareState === "copied"
+              ? "Share link copied to clipboard"
+              : shareState === "error"
+                ? "Failed to copy share link"
+                : "Copy share link to clipboard"
+          }
         >
-          <Share2 aria-hidden="true" size={14} />
-          Share
+          {shareState === "copied" ? (
+            <><Check aria-hidden="true" size={14} /> Copied!</>
+          ) : shareState === "error" ? (
+            <><X aria-hidden="true" size={14} /> Failed</>
+          ) : (
+            <><Share2 aria-hidden="true" size={14} /> Share</>
+          )}
         </button>
       </div>
     </>

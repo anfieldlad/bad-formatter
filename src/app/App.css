@@ -654,6 +654,14 @@
   color: var(--error);
 }
 
+.share-btn-copied {
+  color: var(--success) !important;
+}
+
+.share-btn-error {
+  color: var(--error) !important;
+}
+
 /* ─── Theme Toggle ────────────────────────────────────────────────── */
 
 .theme-toggle {
