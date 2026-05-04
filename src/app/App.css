@@ -624,6 +624,169 @@
   text-decoration: underline;
 }
 
+/* ─── Privacy Policy Modal ───────────────────────────────────────── */
+
+.privacy-dialog {
+  max-width: min(660px, calc(100vw - 32px));
+  max-height: calc(100dvh - 48px);
+  width: 100%;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-panel);
+  background: var(--surface);
+  color: var(--text-1);
+  overflow: hidden;
+}
+
+.privacy-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(3px);
+}
+
+.privacy-dialog-inner {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100dvh - 48px);
+}
+
+.privacy-dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+  flex-shrink: 0;
+}
+
+.privacy-dialog-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-1);
+}
+
+.privacy-close-btn {
+  flex-shrink: 0;
+}
+
+.privacy-dialog-body {
+  padding: 24px 28px;
+  overflow-y: auto;
+  line-height: 1.65;
+  color: var(--text-1);
+}
+
+.privacy-dialog-body h3 {
+  margin: 24px 0 8px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--text-1);
+}
+
+.privacy-dialog-body h3:first-of-type {
+  margin-top: 16px;
+}
+
+.privacy-dialog-body p {
+  margin: 0 0 12px;
+  font-size: 0.875rem;
+  color: var(--text-2);
+}
+
+.privacy-lead {
+  padding: 12px 16px;
+  border-radius: 8px;
+  border-left: 3px solid var(--accent);
+  background: var(--accent-subtle);
+  color: var(--text-1) !important;
+  font-size: 0.875rem;
+}
+
+.privacy-dialog-body ul {
+  margin: 0 0 12px;
+  padding-left: 20px;
+}
+
+.privacy-dialog-body li {
+  margin-bottom: 4px;
+  font-size: 0.875rem;
+  color: var(--text-2);
+}
+
+.privacy-dialog-body a {
+  color: var(--accent-soft);
+  text-decoration: none;
+}
+
+.privacy-dialog-body a:hover {
+  text-decoration: underline;
+}
+
+.privacy-dialog-body code {
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--surface-3);
+  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-size: 0.82em;
+  color: var(--text-1);
+}
+
+.privacy-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 12px;
+  font-size: 0.875rem;
+}
+
+.privacy-table th,
+.privacy-table td {
+  padding: 8px 12px;
+  text-align: left;
+  border: 1px solid var(--border);
+}
+
+.privacy-table th {
+  background: var(--surface-2);
+  color: var(--text-2);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.privacy-table td {
+  color: var(--text-2);
+}
+
+.privacy-updated {
+  margin-top: 24px !important;
+  font-size: 0.78rem !important;
+  color: var(--text-3) !important;
+}
+
+/* ─── Footer link (looks like inline text link) ───────────────────── */
+
+.footer-link {
+  display: inline;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-3);
+  font: inherit;
+  font-size: 0.74rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 130ms ease;
+}
+
+.footer-link:hover {
+  color: var(--accent-soft);
+  text-decoration: underline;
+}
+
 /* ─── Share ──────────────────────────────────────────────────────── */
 
 .share-action {

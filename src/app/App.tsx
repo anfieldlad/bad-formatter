@@ -5,6 +5,7 @@ import { EditorPanel } from "../components/EditorPanel";
 import { EmptyOutput } from "../components/EmptyOutput";
 import { Header } from "../components/Header";
 import { JsonTreeView } from "../components/JsonTreeView";
+import { PrivacyPolicyModal } from "../components/PrivacyPolicyModal";
 import { StatusMessage } from "../components/StatusMessage";
 import { validateJson } from "../domain/jsonFormatter";
 import { useClipboard } from "../hooks/useClipboard";
@@ -29,6 +30,7 @@ export function App() {
   const hasInput = formatter.input.trim().length > 0;
   const hasOutput = formatter.output.length > 0;
   const [shareState, setShareState] = useState<"idle" | "copied" | "error">("idle");
+  const [privacyOpen, setPrivacyOpen] = useState(false);
   const shareResetRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Bootstrap from a shared URL on first load
@@ -312,8 +314,21 @@ export function App() {
           <a href="http://badai.tech" target="_blank" rel="noopener noreferrer">
             BAD AI
           </a>
+          {" · "}
+          <button
+            type="button"
+            className="footer-link"
+            onClick={() => setPrivacyOpen(true)}
+          >
+            Privacy Policy
+          </button>
         </p>
       </footer>
+
+      <PrivacyPolicyModal
+        open={privacyOpen}
+        onClose={() => setPrivacyOpen(false)}
+      />
     </main>
   );
 }
