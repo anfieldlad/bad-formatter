@@ -692,6 +692,12 @@
     justify-content: flex-start;
   }
 
+  /* Stretch action bar buttons to fill the row evenly */
+  .action-bar-group .button {
+    flex: 1;
+    justify-content: center;
+  }
+
   .workspace {
     grid-template-columns: 1fr;
   }
@@ -707,6 +713,11 @@
   .tree-view,
   .output-empty {
     min-height: 280px;
+  }
+
+  /* Keyboard shortcuts are irrelevant on touch/tablet */
+  .kbd-hint {
+    display: none;
   }
 }
 
@@ -726,11 +737,6 @@
     font-size: 1.35rem;
   }
 
-  .button {
-    flex: 1 1 calc(33% - 6px);
-    min-width: 0;
-  }
-
   .editor-header {
     flex-wrap: wrap;
     align-items: center;
@@ -746,5 +752,40 @@
   .editor-header-actions {
     width: 100%;
     justify-content: flex-end;
+    gap: 4px;
+  }
+
+  /* Chip is replaced by the button flash + status bar on small screens */
+  .share-size-chip {
+    display: none;
+  }
+}
+
+/* ─── Touch-friendly targets ─────────────────────────────────────── */
+
+@media (hover: none) and (pointer: coarse) {
+  .button {
+    min-height: 44px;
+  }
+
+  .button.ghost {
+    min-height: 44px;
+    padding: 0 14px;
+  }
+
+  .theme-toggle {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0;
+  }
+
+  .segmented {
+    min-height: 38px;
+    min-width: 44px;
+  }
+
+  .view-option {
+    min-height: 36px;
+    padding: 0 14px;
   }
 }
