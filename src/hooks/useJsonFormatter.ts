@@ -121,6 +121,17 @@ export function useJsonFormatter() {
     });
   }
 
+  function loadShared(json: string) {
+    setInput(json);
+    const result = beautifyJson(json, indentSize);
+    if (result.ok) {
+      setOutput(result.output ?? "");
+      setStatus({ type: "success", message: "Shared JSON loaded." });
+    } else {
+      setStatus({ type: "error", message: formatJsonError(result) });
+    }
+  }
+
   function loadSample() {
     setInput(sampleJson);
     setStatus({
@@ -153,6 +164,7 @@ export function useJsonFormatter() {
     beautify,
     minify,
     validate,
+    loadShared,
     loadSample,
     clearInput,
     clear,

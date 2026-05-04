@@ -35,7 +35,7 @@ export function App() {
   useEffect(() => {
     const shared = decodeShareFromUrl();
     if (shared) {
-      formatter.setInput(shared);
+      formatter.loadShared(shared);
       // Remove the hash so subsequent refreshes start clean
       window.history.replaceState(null, "", window.location.pathname);
     }
