@@ -11,10 +11,12 @@ import { useClipboard } from "../hooks/useClipboard";
 import { useDownload } from "../hooks/useDownload";
 import { useJsonFormatter } from "../hooks/useJsonFormatter";
 import { useKeyboardShortcuts } from "../hooks/useKeyboardShortcuts";
+import { useTheme } from "../hooks/useTheme";
 import type { OutputView } from "../types/formatter";
 import "./App.css";
 
 export function App() {
+  const { theme, toggle: toggleTheme } = useTheme();
   const formatter = useJsonFormatter();
   const [outputView, setOutputView] = useState<OutputView>("text");
   const { copyText } = useClipboard();
@@ -157,7 +159,7 @@ export function App() {
 
   return (
     <main className="app-shell">
-      <Header />
+      <Header theme={theme} onThemeToggle={toggleTheme} />
 
       <ActionToolbar
         indentSize={formatter.indentSize}
@@ -207,6 +209,15 @@ export function App() {
       </section>
 
       <StatusMessage status={formatter.status} />
+
+      <footer className="site-footer">
+        <p>
+          &copy; 2025{" "}
+          <a href="http://badai.tech" target="_blank" rel="noopener noreferrer">
+            BAD AI
+          </a>
+        </p>
+      </footer>
     </main>
   );
 }

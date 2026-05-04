@@ -2,7 +2,7 @@
 
 .app-shell {
   display: grid;
-  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  grid-template-rows: auto auto minmax(0, 1fr) auto auto;
   gap: 14px;
   width: min(1480px, 100%);
   min-height: 100vh;
@@ -181,8 +181,8 @@
 }
 
 .button:hover:not(:disabled) {
-  background: #2a2640;
-  border-color: #3a3554;
+  background: var(--button-hover-bg);
+  border-color: var(--button-hover-border);
 }
 
 .button.primary {
@@ -213,7 +213,7 @@
 
 .button.ghost.danger:hover:not(:disabled) {
   background: rgba(248, 113, 113, 0.08);
-  color: #fca5a5;
+  color: var(--danger-hover-color);
 }
 
 .button:active:not(:disabled) {
@@ -239,8 +239,8 @@
   margin-left: 4px;
   padding: 1px 5px;
   border-radius: 4px;
-  background: rgba(0, 0, 0, 0.2);
-  color: rgba(255, 255, 255, 0.7);
+  background: var(--kbd-bg);
+  color: var(--kbd-color);
   font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
   font-size: 0.68rem;
   font-weight: 700;
@@ -248,7 +248,7 @@
 }
 
 .button.ghost .kbd-hint {
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--ghost-kbd-bg);
   color: var(--text-3);
 }
 
@@ -379,7 +379,7 @@
   border: 0;
   resize: none;
   background: var(--editor-bg);
-  color: #d6d2ee;
+  color: var(--editor-text);
   font-family:
     ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
     monospace;
@@ -395,7 +395,7 @@
 
 .editor[readonly] {
   background: var(--editor-bg-ro);
-  color: #b6b1d2;
+  color: var(--editor-text-ro);
 }
 
 /* ─── Empty Output State ─────────────────────────────────────────── */
@@ -476,7 +476,7 @@
   padding: 16px;
   overflow: auto;
   background: var(--editor-bg-ro);
-  color: #c4c0e4;
+  color: var(--tree-text);
   font-family:
     ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
     monospace;
@@ -513,7 +513,7 @@
 }
 
 .tree-toggle:hover {
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--tree-hover-bg);
 }
 
 .tree-toggle:focus-visible {
@@ -526,20 +526,20 @@
 }
 
 .tree-summary {
-  color: #e2deff;
+  color: var(--tree-summary);
   font-weight: 700;
 }
 
 .tree-string {
-  color: #6ee7b7;
+  color: var(--tree-string);
 }
 
 .tree-number {
-  color: #fcd34d;
+  color: var(--tree-number);
 }
 
 .tree-boolean {
-  color: #c4b5fd;
+  color: var(--tree-boolean);
 }
 
 .tree-null {
@@ -598,6 +598,38 @@
 .status-line .status-timing {
   color: var(--text-3);
   font-variant-numeric: tabular-nums;
+}
+
+/* ─── Footer ─────────────────────────────────────────────────────── */
+
+.site-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  color: var(--text-3);
+  font-size: 0.74rem;
+}
+
+.site-footer p {
+  margin: 0;
+}
+
+.site-footer a {
+  color: var(--accent-soft);
+  text-decoration: none;
+}
+
+.site-footer a:hover {
+  text-decoration: underline;
+}
+
+/* ─── Theme Toggle ────────────────────────────────────────────────── */
+
+.theme-toggle {
+  min-height: 32px;
+  min-width: 32px;
+  padding: 0 8px;
 }
 
 /* ─── Responsive ─────────────────────────────────────────────────── */

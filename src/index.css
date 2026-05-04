@@ -28,6 +28,33 @@
   /* Editor */
   --editor-bg: #08060d;
   --editor-bg-ro: #060409;
+  --editor-text: #d6d2ee;
+  --editor-text-ro: #b6b1d2;
+
+  /* Buttons */
+  --button-hover-bg: #2a2640;
+  --button-hover-border: #3a3554;
+  --danger-hover-color: #fca5a5;
+
+  /* Tree view */
+  --tree-text: #c4c0e4;
+  --tree-hover-bg: rgba(255, 255, 255, 0.04);
+  --tree-summary: #e2deff;
+  --tree-string: #6ee7b7;
+  --tree-number: #fcd34d;
+  --tree-boolean: #c4b5fd;
+
+  /* KBD hints */
+  --kbd-bg: rgba(0, 0, 0, 0.2);
+  --kbd-color: rgba(255, 255, 255, 0.7);
+  --ghost-kbd-bg: rgba(255, 255, 255, 0.04);
+
+  /* Body gradient */
+  --body-gradient: radial-gradient(
+    1100px 600px at 80% -10%,
+    rgba(249, 115, 22, 0.06),
+    transparent 60%
+  );
 
   /* Geometry */
   --radius-panel: 12px;
@@ -45,6 +72,52 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+[data-theme="light"] {
+  /* Surfaces */
+  --bg: #faf9ff;
+  --surface: #ffffff;
+  --surface-2: #f5f4fc;
+  --surface-3: #ece9f8;
+  --border: #dddce8;
+  --border-mid: #ccc9de;
+
+  /* Text */
+  --text-1: #1e1b30;
+  --text-2: #6b6888;
+  --text-3: #a8a6c0;
+
+  /* Editor */
+  --editor-bg: #f8f7fe;
+  --editor-bg-ro: #f4f3fc;
+  --editor-text: #2a2640;
+  --editor-text-ro: #4a4868;
+
+  /* Buttons */
+  --button-hover-bg: #ece9f8;
+  --button-hover-border: #dddce8;
+  --danger-hover-color: #dc2626;
+
+  /* Tree view */
+  --tree-text: #3a3858;
+  --tree-hover-bg: rgba(0, 0, 0, 0.04);
+  --tree-summary: #1e1b30;
+  --tree-string: #059669;
+  --tree-number: #b45309;
+  --tree-boolean: #6d28d9;
+
+  /* KBD hints */
+  --kbd-bg: rgba(0, 0, 0, 0.06);
+  --kbd-color: rgba(0, 0, 0, 0.6);
+  --ghost-kbd-bg: rgba(0, 0, 0, 0.04);
+
+  /* Body gradient */
+  --body-gradient: radial-gradient(
+    1100px 600px at 80% -10%,
+    rgba(249, 115, 22, 0.07),
+    transparent 60%
+  );
+}
+
 * {
   box-sizing: border-box;
 }
@@ -58,13 +131,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
-  background:
-    radial-gradient(
-      1100px 600px at 80% -10%,
-      rgba(249, 115, 22, 0.06),
-      transparent 60%
-    ),
-    var(--bg);
+  background: var(--body-gradient), var(--bg);
 }
 
 button,
